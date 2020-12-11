@@ -35,9 +35,9 @@ public abstract class Solver {
                 .filter(Objects::nonNull);
     }
 
-    protected abstract long part1(Stream<String> s);
+    protected abstract long part1(Stream<String> stream);
 
-    protected abstract long part2(Stream<String> s);
+    protected abstract long part2(Stream<String> stream);
 
     /**
      * Groups lines split by blank lines
