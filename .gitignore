@@ -1,0 +1,16 @@
+/target
+
+# OS-specific
+.DS_Store
+
+# IntelliJ
+/.externalToolBuilders
+/.idea/
+/*.iml
+/*.ipr
+/*.iws
+
+# Eclipse
+/.classpath
+/.project
+/.settings/
