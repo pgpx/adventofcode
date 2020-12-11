@@ -7,12 +7,8 @@ import com.google.common.primitives.Ints;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.AbstractMap;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -20,7 +16,8 @@ import java.util.stream.Stream;
 
 public class Day4 extends Solver {
     public static void main(String[] args) throws URISyntaxException, IOException {
-        new Day4().start("example-4.txt", "input-4.txt");
+        new Day4().solve("example-4.txt", 2, 2);
+        new Day4().solve("input-4.txt", 256, 198);
     }
 
     private static final ImmutableSet<String> FIELDS =
@@ -83,34 +80,17 @@ public class Day4 extends Solver {
     }
 
     private Stream<Map<String, String>> getPassports(Stream<String> s) {
-        List<Map<String, String>> passports = new ArrayList<>();
-        HashMap<String, String> current = null;
-        for (var f : s.flatMap(Day4::parseFields).collect(Collectors.toList())) {
-            if (f.isEmpty()) {
-                if (current != null) {
-                    passports.add(current);
-                    current = null;
-                }
-            } else {
-                if (current == null) {
-                    current = new HashMap<>();
-                }
-                current.put(f.get().getKey(), f.get().getValue());
-            }
-        }
-        if (current != null) {
-            passports.add(current);
-        }
-        return passports.stream();
+        return paragraphs(s).map(
+                l -> l.flatMap(Day4::parseFields)
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
     }
 
-    private static Stream<Optional<? extends Map.Entry<String, String>>> parseFields(String s) {
+    private static Stream<? extends Map.Entry<String, String>> parseFields(String s) {
         var tokens = s.split("\\s+");
         return Stream.of(tokens)
                 .map(v -> {
                     var i = v.indexOf(":");
-                    return i < 0 ? Optional.empty() : Optional.of(
-                            new AbstractMap.SimpleImmutableEntry<>(v.substring(0, i), v.substring(i + 1)));
+                    return new AbstractMap.SimpleImmutableEntry<>(v.substring(0, i), v.substring(i + 1));
                 });
     }
 }

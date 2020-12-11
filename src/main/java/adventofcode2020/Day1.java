@@ -7,7 +7,8 @@ import java.util.stream.Stream;
 
 public class Day1 extends Solver {
     public static void main(String[] args) throws URISyntaxException, IOException {
-        new Day1().start("example-1.txt", "input-1.txt");
+        new Day1().solve("example-1.txt", 514579, 241861950);
+        new Day1().solve("input-1.txt", 1005459, 92643264);
     }
 
     private static final int target = 2020;
@@ -39,7 +40,7 @@ public class Day1 extends Solver {
         var limit = binarySearch(values, 0, values.length, target / 3 + 1);
 
         for (var c = values.length - 1; c >= limit - 1; c--) {
-            for (var  b = binarySearch(values, 0, c, target - values[c]); b > 0; b--) {
+            for (var b = binarySearch(values, 0, c, target - values[c]); b > 0; b--) {
                 var a = binarySearch(values, 0, b, target - values[c] - values[b]);
                 if (values[c] + values[b] + values[a] == target) {
                     return values[a] * values[b] * values[c];

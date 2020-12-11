@@ -8,7 +8,8 @@ import java.util.stream.Stream;
 public class Day2 extends Solver {
 
     public static void main(String[] args) throws URISyntaxException, IOException {
-        new Day2().start("example-2.txt", "input-2.txt");
+        new Day2().solve("example-2.txt", 2, 1);
+        new Day2().solve("input-2.txt", 393, 690);
     }
 
     private static final Pattern LINE_REGEX = Pattern.compile("(\\d+)-(\\d+)\\s+(.):\\s+(.*)");

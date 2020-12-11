@@ -7,7 +7,8 @@ import java.util.stream.Stream;
 
 public class Day5 extends Solver {
     public static void main(String[] args) throws URISyntaxException, IOException {
-        new Day5().start("example-5.txt", "input-5.txt");
+        new Day5().solve("example-5.txt", 820, 120);
+        new Day5().solve("input-5.txt", 935, 743);
     }
 
     @Override

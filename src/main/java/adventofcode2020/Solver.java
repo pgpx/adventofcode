@@ -8,26 +8,25 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.ToLongFunction;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
 public abstract class Solver {
-    public void start(String exampleFilename, String inputFilename) throws URISyntaxException, IOException {
-        System.out.println("Solving example");
-        solve(exampleFilename);
 
-        System.out.println("Solving actual");
-        solve(inputFilename);
+    public void solve(String filename, long expected1, long expected2) throws IOException, URISyntaxException {
+        System.out.println("Solving " + this.getClass().getSimpleName() + " using " + filename);
+        process("Part 1: ", filename, expected1, this::part1);
+        process("Part 2: ", filename, expected2, this::part2);
     }
-
-    protected void solve(String filename) throws IOException, URISyntaxException {
+    protected void process(String label, String filename, long expected, ToLongFunction<Stream<String>> part) throws IOException, URISyntaxException {
         try (var s = readFile(filename)) {
-            System.out.println("Part 1: " + part1(s));
-        }
-
-        try (var s = readFile(filename)) {
-            System.out.println("Part 2: " + part2(s));
+            long actual = part.applyAsLong(s);
+            System.out.println(label + actual);
+            if (actual != expected) {
+                throw new RuntimeException("Expected " + expected + " but got " + actual);
+            }
         }
     }
 

@@ -11,7 +11,8 @@ import static java.util.stream.Collectors.toList;
 
 public class Day3 extends Solver {
     public static void main(String[] args) throws URISyntaxException, IOException {
-        new Day3().start("example-3.txt", "input-3.txt");
+        new Day3().solve("example-3.txt", 7, 336);
+        new Day3().solve("input-3.txt", 195, 3772314000L);
     }
 
     @Override
