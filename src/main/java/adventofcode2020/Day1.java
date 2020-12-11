@@ -3,25 +3,22 @@ package adventofcode2020;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.stream.Stream;
 
-public class Day1 {
+public class Day1 extends Solver {
     public static void main(String[] args) throws URISyntaxException, IOException {
-        System.out.println("Solving test");
-        solve(2020, new int[]{1721, 979, 366, 299, 675, 1456});
-
-        System.out.println("Solving actual");
-        try (var s = Util.readFile(Day1.class, "input-1.txt")) {
-            solve(2020, s.mapToInt(Integer::valueOf).toArray());
-        }
+        new Day1().start("example-1.txt", "input-1.txt");
     }
 
-    public static void solve(int target, int[] values) {
-        solvePart1(target, values);
-        solvePart2(target, values);
+    private static final int target = 2020;
+
+    private static long[] longArray(Stream<String> s) {
+        return s.mapToLong(Long::parseLong).sorted().toArray();
     }
 
-    public static void solvePart1(int target, int[] values) {
-        Arrays.sort(values);
+    @Override
+    protected long part1(Stream<String> s) {
+        var values = longArray(s);
         var insertion = 1 - Arrays.binarySearch(values, target / 2);
 
         int b = values.length - 1;
@@ -30,39 +27,31 @@ public class Day1 {
                 b--;
             }
             if (values[a] + values[b] == target) {
-                System.out.println("Part 1: Found " + values[a] +
-                                           " + " + values[b] +
-                                           " = " + target +
-                                           " -> " + values[a] * values[b]);
-                return;
+                return values[a] * values[b];
             }
         }
-        System.out.println("Part 1: No solution found");
+        throw new RuntimeException("No solution found");
     }
 
-    private static int binarySearch(int[] a, int fromIndex, int toIndex, int key) {
+    @Override
+    protected long part2(Stream<String> s) {
+        var values = longArray(s);
+        var limit = binarySearch(values, 0, values.length, target / 3 + 1);
+
+        for (var c = values.length - 1; c >= limit - 1; c--) {
+            for (var  b = binarySearch(values, 0, c, target - values[c]); b > 0; b--) {
+                var a = binarySearch(values, 0, b, target - values[c] - values[b]);
+                if (values[c] + values[b] + values[a] == target) {
+                    return values[a] * values[b] * values[c];
+                }
+            }
+        }
+        throw new RuntimeException("No solution found");
+    }
+
+    private static int binarySearch(long[] a, int fromIndex, int toIndex, long key) {
         var res = Arrays.binarySearch(a, fromIndex, toIndex, key);
         return (res >= 0) ? res : 1 - res;
     }
 
-    public static void solvePart2(int target, int[] values) {
-        Arrays.sort(values);
-
-        var limit = binarySearch(values, 0, values.length, target / 3 + 1);
-
-        for (int c = values.length - 1; c >= limit - 1; c--) {
-            for (int b = binarySearch(values, 0, c, target - values[c]); b > 0; b--) {
-                var a = binarySearch(values, 0, b, target - values[c] - values[b]);
-                if (values[c] + values[b] + values[a] == target) {
-                    System.out.println("Part 2: Found " + values[a] +
-                                               " + " + values[b] +
-                                               " + " + values[c] +
-                                               " = " + target +
-                                               " -> " + values[a] * values[b] * values[c]);
-                    return;
-                }
-            }
-        }
-        System.out.println("Part 2: No solution found");
-    }
 }
