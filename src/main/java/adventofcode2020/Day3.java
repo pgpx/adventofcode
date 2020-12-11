@@ -1,7 +1,9 @@
 package adventofcode2020;
 
+import com.google.common.collect.Streams;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.AbstractMap.SimpleImmutableEntry;
 
 public class Day3 {
     public static void main(String[] args) throws URISyntaxException, IOException {
@@ -38,5 +40,21 @@ public class Day3 {
         }
         return count;
 
+    }
+
+    public static long streamSolve(String filename, int incCol, int incRow) throws IOException, URISyntaxException {
+        try (var s = Util.readFile(Day3.class, filename)) {
+            return Streams.mapWithIndex(s, SimpleImmutableEntry::new)
+                    .filter(e -> {
+                        var row = e.getValue();
+                        if (row % incRow != 0) {
+                            return false;
+                        }
+                        var k = e.getKey();
+                        var col = (int) (row / incRow * incCol) % k.length();
+                        return k.charAt(col) == '#';
+                    })
+                    .count();
+        }
     }
 }

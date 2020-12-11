@@ -47,8 +47,8 @@ public class Day2 {
     }
 
     public static long solve(String filename, Validator validator) throws IOException, URISyntaxException {
-        return Util.readFile(Day2.class, filename)
-                .filter(l -> isValid(l, validator))
-                .count();
+        try (var s = Util.readFile(Day2.class, filename)) {
+            return s.filter(l -> isValid(l, validator)).count();
+        }
     }
 }

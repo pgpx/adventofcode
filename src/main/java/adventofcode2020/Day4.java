@@ -1,11 +1,8 @@
 package adventofcode2020;
 
-import com.google.common.primitives.Ints;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.BitSet;
-import java.util.Comparator;
-import java.util.stream.Collectors;
 
 public class Day4 {
     public static void main(String[] args) throws URISyntaxException, IOException {
@@ -32,41 +29,19 @@ public class Day4 {
 
     public static int finder(String filename) throws IOException, URISyntaxException {
         int range = 2 << 10;
-        var taken = Util.readFile(Day4.class, filename)
-                .map(Day4::seatId)
-                .reduce(new BitSet(range),
-                        (bs, id) -> {
-                            bs.set(id); return bs;
-                        },
-                        (a, b) -> {
-                            a.or(b); return a;
-                        });
-        taken.set(0, taken.nextSetBit(0));
-        taken.set(taken.previousSetBit(range), range);
-        return taken.nextClearBit(0);
-    }
+        try (var s = Util.readFile(Day4.class, filename)) {
+            var taken = s.mapToInt(Day4::seatId)
+                    .collect(BitSet::new, BitSet::set, BitSet::or);
 
-    public static int finder2(String filename) throws IOException, URISyntaxException {
-        return finder(Ints.toArray(
-                Util.readFile(Day4.class, filename)
-                        .map(Day4::seatId)
-                        .collect(Collectors.toList())));
-    }
-
-    public static int finder(int[] seatIds) {
-        int range = 2 << 10;
-        BitSet taken = new BitSet(range);
-        for (int id : seatIds) {
-            taken.set(id);
+            taken.set(0, taken.nextSetBit(0));
+            taken.set(taken.previousSetBit(range), range);
+            return taken.nextClearBit(0);
         }
-        taken.set(0, taken.nextSetBit(0));
-        taken.set(taken.previousSetBit(range), range);
-        return taken.nextClearBit(0);
     }
 
     public static int maxSeatId(String filename) throws IOException, URISyntaxException {
-        return Util.readFile(Day4.class, filename)
-                .map(Day4::seatId)
-                .max(Comparator.naturalOrder()).orElse(0);
+        try (var s = Util.readFile(Day4.class, filename)) {
+            return s.mapToInt(Day4::seatId).max().orElse(0);
+        }
     }
 }
