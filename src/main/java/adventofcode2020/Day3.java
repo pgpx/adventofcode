@@ -2,7 +2,6 @@ package adventofcode2020;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.stream.Collectors;
 
 public class Day3 {
     public static void main(String[] args) throws URISyntaxException, IOException {
@@ -28,7 +27,7 @@ public class Day3 {
     public static long solve(String filename, int incCol, int incRow) throws IOException, URISyntaxException {
         int col = 0;
         long count = 0;
-        var lines =  Util.readFile(Day3.class, filename).collect(Collectors.toList());
+        var lines =  Util.readFileAsList(Day3.class, filename);
         for (int row = 0; row < lines.size(); row += incRow) {
 //            System.out.println(line.charAt(col));
             var line = lines.get(row);
